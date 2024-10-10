@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  api:
+    working_dir: /app
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    environment:
+      - PORT=3000
+      - DB_HOST=localhost
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=devops
+      - DB_ENGINE=mysql
+      - DB_LOGGING=true
+      - DB_SYNC=false
+    network_mode: bridge
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: yarn start:dev
