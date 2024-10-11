@@ -14,6 +14,8 @@ export class Database {
     dotenv.config();
 
     const entitiesRead = await Database.getClasses(Database.entityPath);
+    console.log("Entities read:");
+    console.log(entitiesRead);
 
     Database.AppDataSource = new DataSource({
       type: "mysql",
