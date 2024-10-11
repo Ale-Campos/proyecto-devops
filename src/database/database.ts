@@ -18,7 +18,7 @@ export class Database {
     console.log(entitiesRead);
 
     Database.AppDataSource = new DataSource({
-      type: "mysql",
+      type: "postgres",
       host: process.env.DB_HOST,
       port: Number(process.env.DB_PORT),
       username: process.env.DB_USER,
@@ -27,7 +27,7 @@ export class Database {
       logging: process.env.DB_LOGGING === "true",
       entities: entitiesRead,
       migrationsTableName: "migrations",
-      synchronize: process.env.DB_SYNC === "true",
+      synchronize: true,
     });
 
     Database.em = Database.AppDataSource.manager;
