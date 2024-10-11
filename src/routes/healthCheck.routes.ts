@@ -14,6 +14,7 @@ healthCheckRouter.get("/db", async (req, res) => {
   try {
     const clients = await Database.em.getRepository(ClientDTO).find();
     const products = await Database.em.getRepository(ProductDTO).find();
+    
     res.json({ clients, products });
   } catch (e) {
     console.error(e);
