@@ -9,15 +9,15 @@ services:
       dockerfile: Dockerfile
       target: dev
     environment:
-      - PORT=3000
-      - DB_HOST=localhost
-      - DB_PORT=3306
-      - DB_USER=root
-      - DB_PASSWORD=root
-      - DB_NAME=devops
-      - DB_ENGINE=mysql
-      - DB_LOGGING=true
-      - DB_SYNC=false
+      - PORT=${PORT}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - DB_ENGINE=${DB_ENGINE}
+      - DB_LOGGING=${DB_LOGGING}
+      - DB_SYNC=${DB_SYNC}
     network_mode: bridge
     ports:
       - 3000:3000
