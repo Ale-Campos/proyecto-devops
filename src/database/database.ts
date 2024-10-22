@@ -1,8 +1,11 @@
+import {ClientDTO} from "./entities/ClientDTO";
+
 const { readdir } = require("fs").promises;
 const dotenv = require("dotenv");
 import "reflect-metadata";
 import * as path from "path";
 import { DataSource, EntityManager } from "typeorm";
+import {ProductDTO} from "./entities/ProductDTO";
 
 export class Database {
   public static AppDataSource: DataSource;
@@ -25,7 +28,7 @@ export class Database {
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       logging: process.env.DB_LOGGING === "true",
-      entities: entitiesRead,
+      entities: [ClientDTO, ProductDTO],
       migrationsTableName: "migrations",
       synchronize: true,
     });
