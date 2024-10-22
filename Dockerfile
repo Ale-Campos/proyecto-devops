@@ -9,6 +9,19 @@ WORKDIR /app
 
 # Set to dev environment
 ENV NODE_ENV dev
+ENV PORT=${PORT}
+ENV DB_HOST=${DB_HOST}
+ENV DB_PORT=${DB_PORT}
+ENV DB_USER=${DB_USER}
+ENV DB_PASSWORD=${DB_PASSWORD}
+ENV DB_NAME=${DB_NAME}
+ENV DB_ENGINE=${DB_ENGINE}
+ENV DB_LOGGING=${DB_LOGGING}
+ENV DB_SYNC=${DB_SYNC}
+ENV NEW_RELIC_NO_CONFIG_FILE=true
+ENV NEW_RELIC_DISTRIBUTED_TRACING_ENABLED=true
+ENV NEW_RELIC_LOG=stdout
+ENV NEW_RELIC_APP_NAME=proyecto-devops
 
 # Copy source code into app folder
 COPY --chown=node:node . .
@@ -39,6 +52,20 @@ RUN apk add --no-cache libc6-compat
 
 # Set to production environment
 ENV NODE_ENV production
+ENV PORT=${PORT}
+ENV DB_HOST=${DB_HOST}
+ENV DB_PORT=${DB_PORT}
+ENV DB_USER=${DB_USER}
+ENV DB_PASSWORD=${DB_PASSWORD}
+ENV DB_NAME=${DB_NAME}
+ENV DB_ENGINE=${DB_ENGINE}
+ENV DB_LOGGING=${DB_LOGGING}
+ENV DB_SYNC=${DB_SYNC}
+ENV NEW_RELIC_NO_CONFIG_FILE=true
+ENV NEW_RELIC_DISTRIBUTED_TRACING_ENABLED=true
+ENV NEW_RELIC_LOG=stdout
+ENV NEW_RELIC_APP_NAME=proyecto-devops
+
 
 # In order to run `yarn build` we need access to TypeScript CLI.
 # TypeScript CLI is a dev dependency.
@@ -66,6 +93,19 @@ RUN apk add --no-cache libc6-compat
 
 # Set to production environment
 ENV NODE_ENV production
+ENV PORT=${PORT}
+ENV DB_HOST=${DB_HOST}
+ENV DB_PORT=${DB_PORT}
+ENV DB_USER=${DB_USER}
+ENV DB_PASSWORD=${DB_PASSWORD}
+ENV DB_NAME=${DB_NAME}
+ENV DB_ENGINE=${DB_ENGINE}
+ENV DB_LOGGING=${DB_LOGGING}
+ENV DB_SYNC=${DB_SYNC}
+ENV NEW_RELIC_NO_CONFIG_FILE=true
+ENV NEW_RELIC_DISTRIBUTED_TRACING_ENABLED=true
+ENV NEW_RELIC_LOG=stdout
+ENV NEW_RELIC_APP_NAME=proyecto-devops
 
 # Copy only the necessary files
 COPY --chown=node:node --from=build /app/dist dist
