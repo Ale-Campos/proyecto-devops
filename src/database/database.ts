@@ -1,11 +1,11 @@
-import {ClientDTO} from "./entities/ClientDTO";
 
 const { readdir } = require("fs").promises;
 const dotenv = require("dotenv");
 import "reflect-metadata";
 import * as path from "path";
 import { DataSource, EntityManager } from "typeorm";
-import {ProductDTO} from "./entities/ProductDTO";
+import {ClientEntity} from "./entities/ClientEntity";
+import {ProductEntity} from "./entities/ProductEntity";
 
 export class Database {
   public static AppDataSource: DataSource;
@@ -17,18 +17,16 @@ export class Database {
     dotenv.config();
 
     const entitiesRead = await Database.getClasses(Database.entityPath);
-    console.log("Entities read:");
-    console.log(entitiesRead);
 
     Database.AppDataSource = new DataSource({
-      type: "postgres",
+      type: process.env.DB_ENGINE as any,
       host: process.env.DB_HOST,
       port: Number(process.env.DB_PORT),
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       logging: process.env.DB_LOGGING === "true",
-      entities: [ClientDTO, ProductDTO],
+      entities: [ClientEntity, ProductEntity],
       migrationsTableName: "migrations",
       synchronize: true,
     });

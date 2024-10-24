@@ -1,8 +1,7 @@
 import { Router } from "express";
-import { ClientDTO } from "../database/entities/ClientDTO";
-import { DataSource } from "typeorm";
 import { Database } from "../database/database";
-import { ProductDTO } from "../database/entities/ProductDTO";
+import { ClientEntity } from "../database/entities/ClientEntity";
+import { ProductEntity } from "../database/entities/ProductEntity";
 
 const healthCheckRouter = Router();
 
@@ -12,8 +11,8 @@ healthCheckRouter.get("/", async (req, res) => {
 
 healthCheckRouter.get("/db", async (req, res) => {
   try {
-    const clients = await Database.em.getRepository(ClientDTO).find();
-    const products = await Database.em.getRepository(ProductDTO).find();
+    const clients = await Database.em.getRepository(ClientEntity).find();
+    const products = await Database.em.getRepository(ProductEntity).find();
     
     res.json({ clients, products });
   } catch (e) {
