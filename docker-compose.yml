@@ -10,12 +10,12 @@ services:
       target: dev
     environment:
       - PORT=${PORT}
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
+      - DB_HOST=mysql
+      - DB_PORT=3306 
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_NAME=${DB_NAME}
-      - DB_ENGINE=${DB_ENGINE}
+      - DB_ENGINE=mysql
       - DB_LOGGING=${DB_LOGGING}
       - DB_SYNC=${DB_SYNC}
       - NEW_RELIC_NO_CONFIG_FILE=true
@@ -28,3 +28,19 @@ services:
       - .:/app
       - /app/node_modules
     command: yarn start:dev
+
+  mysql:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
