@@ -8,31 +8,24 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 ENV NODE_ENV dev
-ENV PORT=${PORT}
-ENV DB_HOST=${DB_HOST}
-ENV DB_PORT=${DB_PORT}
-ENV DB_USER=${DB_USER}
-ENV DB_PASSWORD=${DB_PASSWORD}
-ENV DB_NAME=${DB_NAME}
-ENV DB_ENGINE=${DB_ENGINE}
-ENV DB_LOGGING=${DB_LOGGING}
-ENV DB_SYNC=${DB_SYNC}
-ENV NEW_RELIC_NO_CONFIG_FILE=true
-ENV NEW_RELIC_DISTRIBUTED_TRACING_ENABLED=true
-ENV NEW_RELIC_LOG=stdout
-ENV NEW_RELIC_APP_NAME=proyecto-devops
+ENV DB_LOGGING=true
 
 COPY --chown=node:node . .
 
-RUN yarn --frozen-lockfile
+# Instalar dependencias, incluyendo las de desarrollo
+RUN npm install --legacy-peer-deps
+
+# Instalar los paquetes de tipos necesarios
+RUN npm install --save-dev @types/express @types/supertest @types/jest
 
 USER node
 
-RUN yarn global add typescript
+# Instalar TypeScript localmente
+RUN npx tsc --version
 
-EXPOSE ${PORT}
+EXPOSE 3000
 
-CMD ["yarn", "start:dev"]
+CMD ["npm", "run", "dev"]
 
 
 #
@@ -44,28 +37,13 @@ WORKDIR /app
 RUN apk add --no-cache libc6-compat
 
 ENV NODE_ENV production
-ENV PORT=${PORT}
-ENV DB_HOST=${DB_HOST}
-ENV DB_PORT=${DB_PORT}
-ENV DB_USER=${DB_USER}
-ENV DB_PASSWORD=${DB_PASSWORD}
-ENV DB_NAME=${DB_NAME}
-ENV DB_ENGINE=${DB_ENGINE}
-ENV DB_LOGGING=${DB_LOGGING}
-ENV DB_SYNC=${DB_SYNC}
-ENV NEW_RELIC_NO_CONFIG_FILE=true
-ENV NEW_RELIC_DISTRIBUTED_TRACING_ENABLED=true
-ENV NEW_RELIC_LOG=stdout
-ENV NEW_RELIC_APP_NAME=proyecto-devops
-
 
 COPY --chown=node:node --from=dev /app/node_modules ./node_modules
-
 COPY --chown=node:node . .
 
-RUN yarn build
+RUN npm run build
 
-RUN yarn --frozen-lockfile --production && yarn cache clean
+RUN npm install --legacy-peer-deps --production && npm cache clean --force
 
 USER node
 
@@ -77,21 +55,6 @@ FROM node:18-alpine as prod
 
 WORKDIR /app
 RUN apk add --no-cache libc6-compat
-
-ENV NODE_ENV production
-ENV PORT=${PORT}
-ENV DB_HOST=${DB_HOST}
-ENV DB_PORT=${DB_PORT}
-ENV DB_USER=${DB_USER}
-ENV DB_PASSWORD=${DB_PASSWORD}
-ENV DB_NAME=${DB_NAME}
-ENV DB_ENGINE=${DB_ENGINE}
-ENV DB_LOGGING=${DB_LOGGING}
-ENV DB_SYNC=${DB_SYNC}
-ENV NEW_RELIC_NO_CONFIG_FILE=true
-ENV NEW_RELIC_DISTRIBUTED_TRACING_ENABLED=true
-ENV NEW_RELIC_LOG=stdout
-ENV NEW_RELIC_APP_NAME=proyecto-devops
 
 COPY --chown=node:node --from=build /app/dist dist
 COPY --chown=node:node --from=build /app/node_modules node_modules

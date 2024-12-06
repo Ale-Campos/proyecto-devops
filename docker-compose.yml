@@ -1,42 +1,50 @@
-version: '3'
+version: '3.8'
 
 services:
   api:
-    working_dir: /app
-    restart: unless-stopped
     build:
       context: .
       dockerfile: Dockerfile
-      target: dev
+      target: prod
+    working_dir: /app
+    restart: unless-stopped
     environment:
-      - PORT=${PORT}
-      - DB_HOST=mysql
-      - DB_PORT=3306 
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_NAME=${DB_NAME}
-      - DB_ENGINE=mysql
-      - DB_LOGGING=${DB_LOGGING}
-      - DB_SYNC=${DB_SYNC}
-      - NEW_RELIC_NO_CONFIG_FILE=true
-      - NEW_RELIC_APP_NAME=${NEW_RELIC_APP_NAME}
-      - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
-    network_mode: bridge
+      PORT: 3000
+      DB_ENGINE: mariadb
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_NAME: test
+      DB_LOGGING: true
+      DB_SYNC: true
+    networks:
+      - custom_network
     ports:
-      - "3000:3000"
+      - "4001:3000"
     volumes:
       - .:/app
       - /app/node_modules
-    command: yarn start:dev
+    command: >
+      sh -c "
+      until nc -z mysql 3306; do
+        echo 'Esperando a MySQL...';
+        sleep 3;
+      done;
+      node ./dist/index.js"
+    depends_on:
+      - mysql
 
   mysql:
-    image: mysql:8.0
+    image: mariadb:latest
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-      MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: test
+      MARIADB_USER: root
+      MARIADB_PASSWORD: root
+    networks:
+      - custom_network
     ports:
       - "3306:3306"
     volumes:
@@ -44,3 +52,7 @@ services:
 
 volumes:
   mysql_data:
+
+networks:
+  custom_network:
+    driver: bridge
